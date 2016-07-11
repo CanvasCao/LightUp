@@ -1,0 +1,5 @@
+informationPost接口只传rid
+
+我有两个页面 informationPost和informationPostVideo 他们会掉相同的接口来获得初始化的数据
+
+body一开始opacity=0 页面加载完成后渐变成1

@@ -12,6 +12,8 @@
     function JimiInputBox(container, data) {
         this.C = this.container = (typeof container == 'string') ? $(container) : container;//主页自己写容器
         this.data = data;
+
+        this.clickCallback = data.clickCallback;
         this.config = {
             winW: $(window).width(),
             winH: $(window).height(),
@@ -45,13 +47,13 @@
             var that = this;
 
             $(this.C).css({
-                position: 'relative',
                 height: '50px',
                 'box-sizing': 'border-box',
                 padding: '10px 10px 5px 40px',
                 'background-color': 'white',
                 'font-size': '16px',
             })
+
             $(this.C).find('.jimiInputBoxImg').css({
                 position: 'absolute',
                 top: '5px',
@@ -130,15 +132,16 @@
                         that.btnDisabled();
                         setTimeout(function () {
                             that.btnAbled();
-                        }, 2000)
+                        }, 2000);
 
 
-                        //ajax Insert
+                        //ajax Insert....................................
                         var txt = $(that.C).find('input').val();
-                        GM.ajaxParas.content=txt;
-                        controller.postLightUp(GM.ajaxParas,null);
 
-                        //clearInput
+                        //该组件的初始化参数 在lightUpMask.js传入的初始化参数
+                        that.clickCallback(txt);
+
+                        //clearInput....................................
                         $(that.C).find('input').val("");
 
                     }

@@ -7,13 +7,10 @@
     globalManager.JM = globalManager.jQueryMap = {};
 
 
-    //insert和select共享的paras............................................................
-    globalManager.ajaxParas = {};
+    ////insert和select共享的paras............................................................
+    //globalManager.ajaxParas = {};
+    //globalManager.element = null;
+    //globalManager.elementType = 0; //1文字 2图片 3离散图
 
-
-    //light的clientXY所在的dom元素的位置和类型
-    globalManager.element = null;
-    globalManager.elementType = 0; //1文字 2图片 3离散图
-
-    w.GM=w.globalManager = globalManager;
+    w.GM = w.globalManager = globalManager;
 })(window, document, $);

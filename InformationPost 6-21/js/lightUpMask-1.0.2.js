@@ -48,7 +48,12 @@
             $(this.C).find('.lightUpMaskBottom').append("<div class='maskInputBox'></div>");
 
             if (!that.data.ifShare) {
-                var jimiInputBox = new JimiInputBox($(that.C).find('.maskInputBox')[0], null);
+                var jimiInputBox = new JimiInputBox($(that.C).find('.maskInputBox')[0], {
+                    clickCallback: function (txt) {
+                        GM.ajaxParas.content = txt;
+                        controller.postLightUp(GM.ajaxParas, null);
+                    },
+                });
             }
 
         },
@@ -180,7 +185,6 @@
                 that.initMaskSectionCSS();
                 if (data.length < 3) {
                     that.addFinishLoad();
-
                 }
             }
 

@@ -1,4 +1,4 @@
-function app(ifShare) {
+function app() {
 
     //init 头部图片起始位置................................................................
     $('#con').css({width: $(window).width(), height: $(window).height()})
@@ -8,22 +8,9 @@ function app(ifShare) {
     //jqObj............................................................................
     var $txtContainer = $('.txtContainer');
     var $light = $('.light');
-
-    //mask对象
-    globalManager.lightUpMask = new LightUpMask('.lightUpMask', {
-        ifShare: ifShare,
-        hideCallback: function () {
-            RemoveClass();
-            $light.css({display: 'block'}).animate({opacity: 1}, 'fast', 'swing', function () {
-            });
-        },
-        showCallback: function () {
-            $light.animate({opacity: 0}, 'fast', 'swing', function () {
-                $light.css({display: 'none'});
-            });
-        }
-    });
-
+    //initLightPos.........................................................................
+    var winH = $(window).height();
+    $light.css({top: 1 / 3 * winH - 120});
 
     //点亮标签相关 全局变量...................................................................................
     var ifDragging = false;
@@ -49,10 +36,10 @@ function app(ifShare) {
 
 
     $('.light')[0].addEventListener('touchstart', function (e) {
-        if (globalManager.lightUpMask.ifShow) {
-            e.preventDefault();
-            return;
-        }
+        //if (globalManager.lightUpMask.ifShow) {
+        //    e.preventDefault();
+        //    return;
+        //}
 
         var touch = e.touches[0];
         mouseDown.x = touch.clientX;
@@ -64,10 +51,10 @@ function app(ifShare) {
 
     window.addEventListener('touchmove', function (e) {
         //light不能拖动
-        if (globalManager.lightUpMask.ifShow) {
-            e.preventDefault();
-            return;
-        }
+        //if (globalManager.lightUpMask.ifShow) {
+        //    e.preventDefault();
+        //    return;
+        //}
 
         if (ifDragging) {
             e.preventDefault();
@@ -89,24 +76,24 @@ function app(ifShare) {
         }
     }, false)
 
-    window.addEventListener('touchend', function (e) {
-        //e.preventDefault();
-        if (ifDragging && ifMoved) {
-            ClearTimer();
-
-            if (LightUp()) {
-                ResetAjaxParas();
-                GM.ajaxParas.curPage = 1; //点亮成功一定是请求第一页
-
-                GM.lightUpMask.clear();
-                GM.lightUpMask.show();
-                controller.getLightUp(GM.ajaxParas, null);
-            }
-            ifDragging = false;
-            ifMoved = false;
-        }
-        $light.css(lightState.touchEnd);
-    }, false)
+    //window.addEventListener('touchend', function (e) {
+    //    //e.preventDefault();
+    //    if (ifDragging && ifMoved) {
+    //        ClearTimer();
+    //
+    //        if (LightUp()) {
+    //            ResetAjaxParas();
+    //            GM.ajaxParas.curPage = 1; //点亮成功一定是请求第一页
+    //
+    //            GM.lightUpMask.clear();
+    //            GM.lightUpMask.show();
+    //            controller.getLightUp(GM.ajaxParas, null);
+    //        }
+    //        ifDragging = false;
+    //        ifMoved = false;
+    //    }
+    //    $light.css(lightState.touchEnd);
+    //}, false)
 
     function ClearTimer() {
         clearTimeout(timer);
@@ -125,15 +112,6 @@ function app(ifShare) {
             $(GM.element).parent('.paragraphImg').addClass('active');
         } else if (type == 3) {
             $(GM.element).closest('.paragraphWeb').addClass('active');
-        }
-    }
-
-    function IfAlreadyLightUp() {
-        var ele = GM.element;
-        if ($(ele).closest('.sentence').hasClass('active') || $(ele).parent('.paragraphImg').hasClass('active') || $(ele).closest('.paragraphWeb').hasClass('active')) {
-            return true; //
-        } else {
-            return false;
         }
     }
 
@@ -157,13 +135,12 @@ function app(ifShare) {
 
         globalManager.elementType = GetTypeFromElement();
 
-        if (globalManager.elementType != 0) {
+        if (globalManager.elementType) {
             RemoveClass();
             AddClass();
-            console.log(true);
             return true;
         }
-        console.log(false);
+
         return false;
     };
 
@@ -253,18 +230,6 @@ function app(ifShare) {
             console.log(JSON.stringify(data));
             $('body').animate({opacity: 1});
 
-            //title......................................................................
-            $('.titleImg').attr('src', data.titleImgUrl);
-            $('.titleTextTop').html(data.title);
-            $('.titleTextRead').html(data.read || 1);
-            $('.titleTextStar').html(data.star || 1);
-
-
-            //source IOS不加.................................................................
-            $('.sourceCon div').eq(0).html('文章来自: ' + '<span style="color: #3982e1">' + data.articleSource + '</span>');
-            $('.sourceCon div').eq(1).html(data.atricleDateString || new Date().toLocaleDateString());
-
-
             //txtContainer容器 绑定数据
             var text = data.content;
             $txtContainer.html(text);
@@ -286,20 +251,70 @@ function app(ifShare) {
                     }
 
 
-                    //点亮的count被点击的时候
-                    $('.count').click(function () {
-                        var $that = $(this);
-                        GM.element = $that[0];
-                        GM.elementType = GetTypeFromElement(GM.element);
-                        ResetAjaxParas();
-                        GM.ajaxParas.curPage = 1; //点亮成功一定是请求第一页
+                    //JS bridge............................................................................
+                    function setupWebViewJavascriptBridge(callback) {
+                        if (window.WebViewJavascriptBridge) {
+                            return callback(WebViewJavascriptBridge);
+                        }
+                        if (window.WVJBCallbacks) {
+                            return window.WVJBCallbacks.push(callback);
+                        }
+                        window.WVJBCallbacks = [callback];
+                        var WVJBIframe = document.createElement('iframe');
+                        WVJBIframe.style.display = 'none';
+                        WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+                        document.documentElement.appendChild(WVJBIframe);
+                        setTimeout(function () {
+                            document.documentElement.removeChild(WVJBIframe)
+                        }, 0)
+                    }
 
-                        GM.lightUpMask.clear();
-                        GM.lightUpMask.show();
-                        controller.getLightUp(GM.ajaxParas, null);
+                    setupWebViewJavascriptBridge(function (bridge) {
 
+                        bridge.registerHandler('testJavascriptHandler', function (data, responseCallback) {
+                            if (data.CRDetailRecommendDY) {
+                                var dy = data.CRDetailRecommendDY
+                                $light.stop().animate({top: (1 / 3 * winH - 120 + dy)}, 'fast', 'swing');
+                            }
+                            else if (data.removeClass) {
+                                if (data.removeClass) {
+                                    RemoveClass();
+                                }
+                            }
+                            else if (data) {
+                                addCount(data.type, data.paragraph, data.sentence, data.count);
+                            }
+                            var responseData = {'CaoYuhao Says': 'Right back Bitch!!!'}
+                            responseCallback(responseData)
+                        })
+
+
+                        window.addEventListener('touchend', function (e) {
+                            if (ifDragging && ifMoved) {
+                                ClearTimer();
+
+                                if (LightUp()) {
+                                    ResetAjaxParas();
+                                    bridge.callHandler('testObjcCallback', GM.ajaxParas, function (response) {
+                                    })
+                                }
+
+                                ifDragging = false;
+                                ifMoved = false;
+                            }
+                            $light.css(lightState.touchEnd);
+                        }, false);
+
+                        //点亮的count被点击的时候
+                        $('.count').click(function () {
+                            var $that = $(this);
+                            GM.element = $that[0];
+                            GM.elementType = GetTypeFromElement(GM.element);
+                            ResetAjaxParas();
+                            bridge.callHandler('testObjcCallback', GM.ajaxParas, function (response) {
+                            })
+                        })
                     })
-
                     console.log('下标溢出');
                     return;
                 }
