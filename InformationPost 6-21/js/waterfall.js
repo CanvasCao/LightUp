@@ -66,8 +66,7 @@
 
                 if (top >= (scrollH - conH)) { //动态高-容器高
                     that.JuHuaOn();
-                    //controller.getLightUp(GM.ajaxParas, null);
-                    $(that.C.commentCon).append('<div style="height: 100px" ></div>');
+                    controller.getLightUp(GM.ajaxParas, null);
                     that.JuHuaOff();
 
                 }
@@ -88,7 +87,7 @@
                 "<div class='maskSectionComment'>" + json.content + "</div>" +
                 "</div>");
 
-            $(that.C.scrollCon).scrollTop(0);
+            that.toTop();
             that.initMaskSectionCSS();
 
         },
@@ -163,6 +162,7 @@
 
             $(that.C.commentCon).find('.maskSectionComment').css({
                 'font-size': '12px',
+                'word-break': 'break-word',
             })
 
         },
@@ -171,10 +171,16 @@
             var that = this;
         },
 
+        toTop: function () {
+            var that = this;
+            $(that.C.scrollCon).scrollTop(0);
+
+        },
+
         JuHuaOn: function () {
             var that = this;
             if (!$(that.C.commentCon).find('#juhua').length) {
-                $(that.C.commentCon).append("<div id='juhua' style='text-align: center;height: 100px;line-height: 100px'>正在加载...</div>")
+                $(that.C.commentCon).append("<div id='juhua' style='text-align: center;height: 100px;line-height: 100px;padding-bottom: 50px;'>正在加载...</div>")
             }
         },
 
@@ -186,14 +192,14 @@
         addNoData: function () {
             var that = this;
             if (!$(that.C.commentCon).find('#nodata').length) {
-                $(that.C.commentCon).append("<div id='nodata' style='text-align: center;height: 200px;line-height: 200px'>暂无数据</div>");
+                $(that.C.commentCon).append("<div id='nodata' style='text-align: center;height: 200px;line-height: 200px;padding-bottom: 50px;'>暂无数据</div>");
             }
             that.ifNeedAjax = false;
         },
         addFinishLoad: function () {
             var that = this;
             if (!$(that.C.commentCon).find('#finishload').length) {
-                $(that.C.commentCon).append("<div id='finishload' style='text-align: center;height: 50px;line-height: 50px'>加载完成</div>");
+                $(that.C.commentCon).append("<div id='finishload' style='text-align: center;height: 50px;line-height: 50px;padding-bottom: 50px;'>加载完成</div>");
             }
             that.ifNeedAjax = false;
         },

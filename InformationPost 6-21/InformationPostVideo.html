@@ -115,7 +115,7 @@
 <script>
     $(function () {
         if (!window.location.search) {
-            window.location = window.location + '?rid=466&uid=10002&uimg=http://7xo2me.com1.z0.glb.clouddn.com/images/17RTW5G74N2J.jpg&uname=方辉真帅';
+            window.location = window.location + '?rid=502&uid=10002&uimg=http://7xo2me.com1.z0.glb.clouddn.com/images/17RTW5G74N2J.jpg&uname=方辉真帅';
         }
         //searchJson............................................................
         window.searchJson = window.location.search.searchToJson();
@@ -131,7 +131,7 @@
 
         //initGM..........................................................
         GM.ajaxParas = {
-            perPage: 5,
+            perPage: 8,
             curPage: 1,//当前页数1 永远先请求第一页
             rid: searchJson.rid,
             uid: searchJson.uid,
@@ -140,7 +140,7 @@
         GM.jimiInputBox = new JimiInputBox('.jimiInputBox', {
             clickCallback: function (txt) {
                 GM.ajaxParas.content = txt;
-//                controller.postLightUp(GM.ajaxParas, null);
+                controller.postLightUp(GM.ajaxParas, null);
             },
         });
 
@@ -148,8 +148,8 @@
         //ajaxBindData..........................................................
         $.ajax({
             type: "get",
-//            url: jimiHost + '/informationPost.php' + window.location.search,
-            url: 'videoResource.json',
+            url: jimiHost + '/informationPost.php' + window.location.search,
+//            url: 'videoResource.json',
             dataType: "jsonp",
             jsonp: "callback",
             jsonpCallback: "jsonpcallback",
@@ -159,9 +159,14 @@
 
                 //绑定数据....................
                 $('#video').attr({'src': data.videoUrl});
-                $('.read').html(data.read);
-                $('.star').html(data.star);
-                $('.description').html(data.description)
+                $('.read').html(data.read || 1);
+                $('.star').html(data.star || 1);
+
+                if (data.description) {
+                    $('.description').html(data.description);
+                } else {
+                    $('.description').remove();
+                }
 
 
                 //绑定瀑布流对象................................

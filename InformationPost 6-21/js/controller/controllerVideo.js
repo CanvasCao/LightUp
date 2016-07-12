@@ -5,6 +5,7 @@
     var controller = {};
 
     controller.postLightUp = function (data, callback) {
+        console.log(JSON.stringify(data));
         $.ajax({
             type: "post",
             url: jimiHost + '/postLightUp.php',
@@ -17,11 +18,11 @@
                 console.log('Success!')
                 console.log(JSON.stringify(data));
 
-                //GM.lightUpMask.prependContent({
-                //    userImgUrl: searchJson.uimg,
-                //    userName: searchJson.uname,
-                //    content: GM.ajaxParas.content,
-                //})
+                GM.waterfall.prependContent({
+                    userImgUrl: searchJson.uimg,
+                    userName: searchJson.uname,
+                    content: GM.ajaxParas.content,
+                });
 
             },
             error: function (err) {
@@ -36,7 +37,7 @@
         $.ajax({
             type: "post",
             url: jimiHost + '/getLightUp.php',
-            //url: 'content.json',
+            //url: 'videoComment.json',
             data: data,
             dataType: "jsonp",
             jsonp: "callback",
