@@ -64,7 +64,7 @@
 <script>
     $(function () {
         if (!window.location.search) {
-            window.location = window.location + '?rid=466&jsonpcallback=1';
+            window.location = window.location + '?rid=466';
         }
         //searchJson.......................................................................
         window.searchJson = window.location.search.searchToJson();
@@ -76,7 +76,7 @@
             rid: searchJson.rid,
             uid: searchJson.uid,
             type: 0,//点亮的类型 1 2 3
-            jsonpcallback: searchJson.jsonpcallback,
+            jsonpcallback: 1,
 
         };
 

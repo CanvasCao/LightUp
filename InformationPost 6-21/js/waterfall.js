@@ -20,7 +20,7 @@
         this.data = data;
 
         this.config = {
-            perPage:5,
+            perPage: 5,
             imgW: 60,//单个评论的图片大小
         };
         this.JM = this.jqueryMap = {};
@@ -41,7 +41,7 @@
         },
         createDom: function () {
             var that = this;
-
+            //dom已经存在..................
         },
         initCSS: function () {
             var that = this;
@@ -70,7 +70,6 @@
                     $(that.C.commentCon).append('<div style="height: 100px" ></div>');
                     that.JuHuaOff();
 
-
                 }
             })
 
@@ -80,7 +79,7 @@
             var that = this;
 
             var userImgUrl = json.userImgUrl || 'img/logo.jpg';
-            $(that.C).find('.maskSectionScroll').prepend(
+            $(that.C.commentCon).prepend(
                 "<div class='maskSection'>" +
                 "<div class='maskSectionImg'> <img src='" + userImgUrl + "' width='" + 40 + "' /> </div>" +
                 "<div class='maskSectionContent'>" +
@@ -89,7 +88,7 @@
                 "<div class='maskSectionComment'>" + json.content + "</div>" +
                 "</div>");
 
-            $(that.C).find('.maskSectionCon').scrollTop(0);
+            $(that.C.scrollCon).scrollTop(0);
             that.initMaskSectionCSS();
 
         },
@@ -174,7 +173,7 @@
 
         JuHuaOn: function () {
             var that = this;
-            if (!$(that.C.scrollCon).find('#juhua').length) {
+            if (!$(that.C.commentCon).find('#juhua').length) {
                 $(that.C.commentCon).append("<div id='juhua' style='text-align: center;height: 100px;line-height: 100px'>正在加载...</div>")
             }
         },

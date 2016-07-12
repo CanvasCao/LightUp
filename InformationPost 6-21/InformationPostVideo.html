@@ -89,6 +89,7 @@
     <video id="video" x-webkit-airplay="true" webkit-playsinline="true" preload="none" controls="controls" width="100%"
            height="100%"></video>
 </div>
+
 <div class='scrollCon'>
     <div class='scroll'>
         <div class='readAndStar'>
@@ -109,11 +110,12 @@
 <script src='js/searchToJson/searchToJson.js'></script>
 <script src='js/globalManager/globalManager.js'></script>
 <script src='js/jimiInputBox-2.0.0.js'></script>
+<script src='js/controller/controllerVideo.js'></script>
 
 <script>
     $(function () {
         if (!window.location.search) {
-            window.location = window.location + '?rid=466&uid=10450&uimg=http://7xo2me.com1.z0.glb.clouddn.com/images/17RTW5G74N2J.jpg&uname=方辉真帅&jsonpcallback=1';
+            window.location = window.location + '?rid=466&uid=10002&uimg=http://7xo2me.com1.z0.glb.clouddn.com/images/17RTW5G74N2J.jpg&uname=方辉真帅';
         }
         //searchJson............................................................
         window.searchJson = window.location.search.searchToJson();
@@ -129,12 +131,13 @@
 
         //initGM..........................................................
         GM.ajaxParas = {
-            perPage: 3,
+            perPage: 5,
             curPage: 1,//当前页数1 永远先请求第一页
             rid: searchJson.rid,
+            uid: searchJson.uid,
             jsonpcallback: 1,
         };
-        GM.jimiInputBox = new JimiInputBox('.jimiInputBox',  {
+        GM.jimiInputBox = new JimiInputBox('.jimiInputBox', {
             clickCallback: function (txt) {
                 GM.ajaxParas.content = txt;
 //                controller.postLightUp(GM.ajaxParas, null);
@@ -154,7 +157,7 @@
                 console.log(JSON.stringify(data));
                 $('body').animate({opacity: 1});
 
-
+                //绑定数据....................
                 $('#video').attr({'src': data.videoUrl});
                 $('.read').html(data.read);
                 $('.star').html(data.star);
@@ -171,24 +174,7 @@
 
                 //加载第一次评论......................................
                 GM.waterfall.JuHuaOn();
-                $.ajax({
-                    type: "post",
-//            url: jimiHost + '/informationPost.php' + window.location.search,
-                    url: 'videoComment.json',
-                    dataType: "jsonp",
-                    jsonp: "callback",
-                    jsonpCallback: "jsonpcallback",
-                    success: function (data) {
-                        console.log(JSON.stringify(data));
-                        GM.waterfall.JuHuaOff();
-                        GM.waterfall.appendContent(data.data);
-
-                    },
-                    error: function (err) {
-                        console.log('ERROR!');
-                        console.log(err);
-                    }
-                })
+                controller.getLightUp(GM.ajaxParas, null);
 
             },
             error: function (err) {

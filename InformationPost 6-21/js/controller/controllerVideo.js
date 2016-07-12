@@ -17,13 +17,12 @@
                 console.log('Success!')
                 console.log(JSON.stringify(data));
 
-                GM.lightUpMask.prependContent({
-                    userImgUrl: searchJson.uimg,
-                    userName: searchJson.uname,
-                    content: GM.ajaxParas.content,
-                })
+                //GM.lightUpMask.prependContent({
+                //    userImgUrl: searchJson.uimg,
+                //    userName: searchJson.uname,
+                //    content: GM.ajaxParas.content,
+                //})
 
-                GM.updateCount();
             },
             error: function (err) {
                 console.log('ERROR!')
@@ -45,22 +44,21 @@
             success: function (data) {
                 console.log(JSON.stringify(data));
 
-                var lum = GM.lightUpMask;
-                lum.JuHuaOff();
+                var waterfall = GM.waterfall;
+                GM.waterfall.JuHuaOff();
 
-                //console.log(that.ajaxGetData);
                 if (data.data.length == 0) {
                     if (GM.ajaxParas.curPage == 1) {
-                        lum.addNoData();
+                        waterfall.addNoData();
                         return;
                     }
                     if (GM.ajaxParas.curPage > 1) {
-                        lum.addFinishLoad();
+                        waterfall.addFinishLoad();
                         return;
                     }
                 }
                 else {
-                    lum.appendContent(data.data);
+                    waterfall.appendContent(data.data);
                     GM.ajaxParas.curPage++;
                 }
 
@@ -69,6 +67,11 @@
             error: function (err) {
                 console.log('ERROR!');
                 console.log(err);
+
+                var waterfall = GM.waterfall;
+                waterfall.JuHuaOff();
+                waterfall.addFinishLoad();
+
             }
         });
     }
