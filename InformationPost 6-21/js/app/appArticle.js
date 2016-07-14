@@ -275,12 +275,14 @@ function app(ifShare) {
                 if (index == $jimiYunYing.length) {
 
                     //这里代表数据绑定完可以显示有点亮的数据
-                    initCss(data.lightUpData);
-                    function initCss(lightUpData) {
+                    if (data.lightUpData) {
+                        initCss(data.lightUpData);
+                        function initCss(lightUpData) {
 //                                    console.log(JSON.stringify(lightUpData));
-                        [].forEach.call(lightUpData, function (e, i, arr) {
-                            addCount(e.type, e.paragraph, e.sentence, e.count);
-                        })
+                            [].forEach.call(lightUpData, function (e, i, arr) {
+                                addCount(e.type, e.paragraph, e.sentence, e.count);
+                            })
+                        }
                     }
 
 

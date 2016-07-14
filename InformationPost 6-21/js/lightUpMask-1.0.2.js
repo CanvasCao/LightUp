@@ -53,6 +53,7 @@
                         GM.ajaxParas.content = txt;
                         controller.postLightUp(GM.ajaxParas, null);
                     },
+                    uimg:searchJson.uimg,
                 });
             }
 

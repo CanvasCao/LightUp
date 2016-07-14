@@ -12,8 +12,9 @@
     function JimiInputBox(container, data) {
         this.C = this.container = (typeof container == 'string') ? $(container) : container;//主页自己写容器
         this.data = data;
-
+        this.uimg = data.uimg;
         this.clickCallback = data.clickCallback;
+
         this.config = {
             winW: $(window).width(),
             winH: $(window).height(),
@@ -37,7 +38,7 @@
             var that = this;
             $(this.C).html('<div class="jimiInputBoxImg"></div><div class="jimiInputBoxText"></div>');
 
-            $(this.C).find('.jimiInputBoxImg').html('<img src="img/logo.jpg" alt=""/></div>')
+            $(this.C).find('.jimiInputBoxImg').html('<img /></div>')
             $(this.C).find('.jimiInputBoxText').html(' <input type="text" maxlength="40" value="随便说点什么"/>' +
                 '<div class="jimiInputBoxSubmit">微评</div>');
 
@@ -65,11 +66,13 @@
                 padding: '5px',
             })
 
-
-            $(this.C).find('.jimiInputBoxImg img').css({
-                width: '30px',
-                'border-radius': '50%',
-            })
+            $(this.C).find('.jimiInputBoxImg img')
+                .attr({src: that.uimg})
+                .css({
+                    width: '30px',
+                    height: '30px',
+                    'border-radius': '50%',
+                })
 
             $(this.C).find('.jimiInputBoxText').css({
                 'box-sizing': 'border-box',
