@@ -6,82 +6,7 @@
           content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
     <title>肌秘视频</title>
     <link rel="stylesheet" href="css/main.css"/>
-    <style>
-        video {
-            object-fit: contain;
-            background-color: #000;
-        }
-
-        .scrollCon {
-            box-sizing: border-box;
-            overflow: scroll;
-            position: relative;
-        }
-
-        .readAndStar {
-            /*border: 1px solid #000;*/
-            box-sizing: border-box;
-            padding: 10px 10px;
-            height: 45px;
-            border-bottom: 5px solid #eee;
-        }
-
-        .read {
-            display: inline-block;
-            position: relative;
-            margin-left: 30px;
-            margin-right: 10px;
-        }
-
-        .read::after {
-            content: "";
-            position: absolute;
-            top: -1px;
-            left: -30px;
-            width: 20px;
-            height: 20px;
-            background: url("img/video/eye.png") no-repeat;
-            background-size: cover;
-        }
-
-        .star {
-            display: inline-block;
-            position: relative;
-            margin-left: 30px;
-        }
-
-        .star::after {
-            content: "";
-            position: absolute;
-            top: -1px;
-            left: -30px;
-            width: 20px;
-            height: 20px;
-            background: url("img/video/star.png") no-repeat;
-            background-size: cover;
-        }
-
-        .description {
-            box-sizing: border-box;
-            padding: 10px 15px 15px;
-            color: #666;
-            border-bottom: 5px solid #eee;
-            line-height: 24px;
-            letter-spacing: 2px;
-
-        }
-
-        .commentCon {
-
-        }
-
-        .jimiInputBox {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-
-    </style>
+    <link rel="stylesheet" href="css/video/documentFlow.css"/>
 </head>
 <body>
 
@@ -111,6 +36,7 @@
 <script src='js/globalManager/globalManager.js'></script>
 <script src='js/jimiInputBox-2.0.0.js'></script>
 <script src='js/controller/controllerVideo.js'></script>
+<script src='js/app/appVideo.js'></script>
 
 <script>
     $(function () {
@@ -119,14 +45,6 @@
         }
         //searchJson............................................................
         window.searchJson = window.location.search.searchToJson();
-
-
-        //initCSS...............................................................
-        //视频比例
-        $('#videoCon').css({width: $(window).width(), height: $(window).width() * 9 / 16});
-        var winH = $(window).height();
-        var vH = $('#videoCon').height();
-        $('.scrollCon').css({height: (winH - vH)});
 
 
         //initGM..........................................................
@@ -144,49 +62,8 @@
             },
         });
 
-
-        //ajaxBindData..........................................................
-        $.ajax({
-            type: "get",
-            url: jimiHost + '/informationPost.php' + window.location.search,
-//            url: 'videoResource.json',
-            dataType: "jsonp",
-            jsonp: "callback",
-            jsonpCallback: "jsonpcallback",
-            success: function (data) {
-                console.log(JSON.stringify(data));
-                $('body').animate({opacity: 1});
-
-                //绑定数据....................
-                $('#video').attr({'src': data.videoUrl});
-                $('.read').html(data.read || 1);
-                $('.star').html(data.star || 1);
-
-                if (data.description) {
-                    $('.description').html(data.description);
-                } else {
-                    $('.description').remove();
-                }
-
-
-                //绑定瀑布流对象................................
-                GM.waterfall = new Waterfall({
-                    scrollCon: $('.scrollCon'),//滚动部分的容器
-                    scroll: $('.scroll'),//滚动部分
-                    commentCon: $('.commentCon'),//评论的添加部分
-                }, null);
-
-
-                //加载第一次评论......................................
-                GM.waterfall.JuHuaOn();
-                controller.getLightUp(GM.ajaxParas, null);
-
-            },
-            error: function (err) {
-                console.log('ERROR!');
-                console.log(err);
-            }
-        });
+        var ifShare=false;
+        app(ifShare);
     })
 </script>
 </body>
