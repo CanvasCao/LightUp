@@ -8,7 +8,6 @@ function app(ifShare) {
     $('.scrollCon').css({height: (winH - vH)});
 
 
-
     //ajaxBindData..........................................................
     $.ajax({
         type: "get",
@@ -44,6 +43,10 @@ function app(ifShare) {
             //加载第一次评论......................................
             GM.waterfall.JuHuaOn();
             controller.getLightUp(GM.ajaxParas, null);
+
+
+            //JSBridge........................................
+
 
         },
         error: function (err) {

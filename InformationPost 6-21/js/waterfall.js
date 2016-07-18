@@ -89,7 +89,7 @@
 
             that.toTop();
             that.initMaskSectionCSS();
-
+            $(that.C.commentCon).find('#nodata').remove();
         },
         appendContent: function (data) {
             var that = this;
@@ -192,7 +192,18 @@
         addNoData: function () {
             var that = this;
             if (!$(that.C.commentCon).find('#nodata').length) {
-                $(that.C.commentCon).append("<div id='nodata' style='text-align: center;height: 200px;line-height: 200px;padding-bottom: 50px;'>暂无数据</div>");
+                $(that.C.commentCon).append("<div id='nodata'>" +
+                    '<img src="img/nodata.jpg" />' +
+                    "<div>快来评论吧...</div>" +
+                    "</div>");
+                $(that.C.commentCon).find('#nodata').css({
+                    'text-align': 'center',
+                    'padding-bottom': 50,
+                }).find('img').css({
+                    display: 'block',
+                    margin:'50px auto'
+                })
+
             }
             that.ifNeedAjax = false;
         },
