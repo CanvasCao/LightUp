@@ -216,7 +216,9 @@ function app(ifShare) {
         } else if (eleType == 3) {
             $ele = $('.paragraphWeb').eq(paragraph);
         }
-
+        else {
+            return;
+        }
         $ele.addClass('init').find('.count').html(count + '吐槽').fadeIn();//显示吐槽数量
     }
 
