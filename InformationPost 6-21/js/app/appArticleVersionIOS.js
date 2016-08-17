@@ -140,7 +140,6 @@ function app() {
             AddClass();
             return true;
         }
-
         return false;
     };
 
@@ -194,6 +193,8 @@ function app() {
             $ele = $('.paragraphImg').eq(paragraph);
         } else if (eleType == 3) {
             $ele = $('.paragraphWeb').eq(paragraph);
+        } else {
+            return;
         }
 
         $ele.addClass('init').find('.count').html(count + '吐槽').fadeIn();//显示吐槽数量
@@ -245,7 +246,11 @@ function app() {
                     if (data.lightUpData) {
                         initCss(data.lightUpData);
                         function initCss(lightUpData) {
-//                                    console.log(JSON.stringify(lightUpData));
+//                          console.log(JSON.stringify(lightUpData));
+
+                            if (!lightUpData) {
+                                return;
+                            }
                             [].forEach.call(lightUpData, function (e, i, arr) {
                                 addCount(e.type, e.paragraph, e.sentence, e.count);
                             })

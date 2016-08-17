@@ -190,8 +190,6 @@ function app(ifShare) {
             var paragraph = $(GM.element).closest('.paragraphImg').index('.paragraphImg');
             GM.ajaxParas.type = GM.elementType;
             GM.ajaxParas.paragraph = paragraph;
-
-
         }
         else if (GM.elementType == 3) {
             var paragraph = $(GM.element).closest('.paragraphWeb').index('.paragraphWeb');
@@ -281,9 +279,13 @@ function app(ifShare) {
                         initCss(data.lightUpData);
                         function initCss(lightUpData) {
 //                                    console.log(JSON.stringify(lightUpData));
+                            if (!lightUpData) {
+                                return;
+                            }
+                            ;
                             [].forEach.call(lightUpData, function (e, i, arr) {
                                 addCount(e.type, e.paragraph, e.sentence, e.count);
-                            })
+                            });
                         }
                     }
 
