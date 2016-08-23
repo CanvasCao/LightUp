@@ -1,0 +1,73 @@
+video {
+    object-fit: contain;
+    background-color: #000;
+}
+
+.scrollCon {
+    box-sizing: border-box;
+    overflow: scroll;
+    position: relative;
+}
+
+.readAndStar {
+    /*border: 1px solid #000;*/
+    box-sizing: border-box;
+    padding: 10px 10px;
+    height: 45px;
+    border-bottom: 5px solid #eee;
+}
+
+.read {
+    display: inline-block;
+    position: relative;
+    margin-left: 30px;
+    margin-right: 10px;
+}
+
+.read::after {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: -30px;
+    width: 20px;
+    height: 20px;
+    background: url("../../img/video/eye.png") no-repeat;
+    background-size: cover;
+}
+
+.star {
+    display: inline-block;
+    position: relative;
+    margin-left: 30px;
+}
+
+.star::after {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: -30px;
+    width: 20px;
+    height: 20px;
+    background: url("../../img/video/star.png") no-repeat;
+    background-size: cover;
+}
+
+.description {
+    box-sizing: border-box;
+    padding: 10px 15px 15px;
+    color: #666;
+    border-bottom: 5px solid #eee;
+    line-height: 24px;
+    letter-spacing: 2px;
+
+}
+
+.commentCon {
+
+}
+
+.jimiInputBox {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

@@ -1,0 +1,10 @@
+说明 8-23 版本资讯增加回复功能 安卓纯web IOS依然用jsBridge
+
+组件变化	评论单元增加回复按钮
+		inputBox在没有文字的时候显示回复了谁
+		
+InformationPost是安卓和web版		
+InformationPostShare是分享版本 区别只有是否有inputBox一种区别
+InformationPostVersionIOS JSBridge 应该把version封装成全局变量 但是没写
+InformationPostVideo 视频页
+InformationPostVideoShare 视频分享 区别只在于有没有inputBox
