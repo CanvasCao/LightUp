@@ -56,8 +56,8 @@
 <script src='js/jimiHost.js'></script>
 <script src='js/base.js'></script>
 
-<script src='js/lightUpMask-1.0.2.js'></script>
-<script src='js/jimiInputBox-2.0.0.js'></script>
+<script src='js/lightUpMask-1.0.3.js'></script>
+<script src='js/jimiInputBox-3.0.0.js'></script>
 <script src='js/app/appArticle.js'></script>
 
 
@@ -69,7 +69,7 @@
         //searchJson.......................................................................
         window.searchJson = window.location.search.searchToJson();
 
-        GM.ifShare = false;
+        GM.ifShare = true;
         globalManager.ajaxParas = {
             perPage: 3,
             curPage: 1,//当前页数1 永远先请求第一页

@@ -22,7 +22,7 @@
                 GM.lightUpMask.prependContent({
                     lightUpId: data.id,
                 })
-
+                GM.jimiInputBox.fresh(); //输入框重置代表删除 回复信息对象
                 GM.updateCount();
             },
             error: function (err) {

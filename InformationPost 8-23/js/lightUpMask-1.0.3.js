@@ -1,10 +1,10 @@
 /*!
- * lightUpMask, a JavaScriptPlugIn v1.0.2
+ * lightUpMask, a JavaScriptPlugIn v1.0.3
  * http://www.jimi.la/
  *
  * Copyright 2016, CaoYuhao
  * All rights reserved.
- * Date: 2016-6-7 15:23:58
+ * Date: 2016-8-24 16:37:51
  */
 
 //1.0.2 瀑布流
@@ -151,7 +151,7 @@
         },
 
 
-        //返回一个评论单元....................................................
+        //返回一个评论单元....................................................................
         getMaskSectionStr: function (json) {
             var lightUpId = json.lightUpId;
             var userId = json.userId;
@@ -162,8 +162,8 @@
             if (GM.ifShare) {
                 replyDomStr = '';
             } else {
-                //点击会知道当前用户的主键 告诉服务器 哪条评论被回复 的主键和uid
-                replyDomStr = (userId == searchJson.uid) ? "" : "<div class='maskSectionReply data-bindclick=false data-lid=" + lightUpId + " data-uid=" + lightUpId + " '><img src='img/reply.png' class='maskSectionReplyImg' />回复</div>";
+                //点击会知道当前用户的主键 告诉服务器 哪条评论被回复 的主键和uid 记录uname是因为 点击回复需要显示回复了谁
+                replyDomStr = (userId == searchJson.uid) ? "" : "<div class=maskSectionReply data-bindclick=false data-lid=" + lightUpId + " data-uid=" + userId + " data-uname=" + json.userName + " ><img src='img/reply.png' class='maskSectionReplyImg' />回复</div>";
             }
 
             var content = json.content;
@@ -183,6 +183,8 @@
             return maskSectionStr;
         },
 
+
+        //服务器返回了我新插入的记录主键 data.id
         prependContent: function (json) {
             var that = this;
 
@@ -194,6 +196,7 @@
                 content: GM.ajaxParas.content,//content 变量在inputBox点击的时候修改 点击事件在LightUpMask的新建inputBox定义
                 userId: searchJson.uid,
                 lightUpId: json.lightUpId,//这条insert记录 主键在调插入接口以后会返回
+                replyUname: GM.ajaxParas.replyUname,
             });
 
 
@@ -298,14 +301,23 @@
             //遍历maskSectionReply 如果绑定过事件则不再绑定 否则事件会叠加
             $(that.C).find('.maskSectionReply').each(function (i, e) {
                 var ifBindclick = $(e).attr('data-bindclick');
-                if (!ifBindclick) {
+
+                if (ifBindclick == 'false') {
                     $(e).attr('data-bindclick', 'true');
                     $(e).click(function () {
-                       GM.jimiInputBox
+
+                        //设置回复对象 一旦设置 接口会认为这条是回复 但是app.js点亮之前会调用mask.clear()  clear中间又会调用fresh()....................
+                        var uid = $(e).attr('data-uid');
+                        var lid = $(e).attr('data-lid');
+                        var uname = $(e).attr('data-uname');
+                        GM.ajaxParas.replyUname = uname;
+                        GM.ajaxParas.replyUid = uid;
+                        GM.ajaxParas.lid = lid;//其实是replyId
+                        GM.jimiInputBox.setReplyInfo();
+
                     })
                 }
             })
-
 
         },
         show: function () {

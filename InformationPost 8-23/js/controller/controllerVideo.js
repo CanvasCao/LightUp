@@ -19,10 +19,9 @@
                 console.log(JSON.stringify(data));
 
                 GM.waterfall.prependContent({
-                    userImgUrl: searchJson.uimg,
-                    userName: searchJson.uname,
-                    content: GM.ajaxParas.content,
-                });
+                    lightUpId: data.id,
+                })
+                GM.jimiInputBox.fresh(); //输入框重置代表删除 回复信息对象
 
             },
             error: function (err) {
@@ -69,9 +68,9 @@
                 console.log('ERROR!');
                 console.log(err);
 
-                var waterfall = GM.waterfall;
-                waterfall.JuHuaOff();
-                waterfall.addFinishLoad();
+                //var waterfall = GM.waterfall;
+                //waterfall.JuHuaOff();
+                //waterfall.addFinishLoad();
 
             }
         });

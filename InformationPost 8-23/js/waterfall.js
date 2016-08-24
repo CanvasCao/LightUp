@@ -73,44 +73,87 @@
             })
 
         },
+        //返回一个评论单元....................................................................
+        getMaskSectionStr: function (json) {
+            var lightUpId = json.lightUpId;
+            var userId = json.userId;
 
+
+            //点击回复按钮....................................................................
+            var replyDomStr = '';
+            if (GM.ifShare) {
+                replyDomStr = '';
+            } else {
+                //点击会知道当前用户的主键 告诉服务器 哪条评论被回复 的主键和uid 记录uname是因为 点击回复需要显示回复了谁
+                replyDomStr = (userId == searchJson.uid) ? "" : "<div class=maskSectionReply data-bindclick=false data-lid=" + lightUpId + " data-uid=" + userId + " data-uname=" + json.userName + " ><img src='img/reply.png' class='maskSectionReplyImg' />回复</div>";
+            }
+
+            var content = json.content;
+            if (json.replyUname) {
+                //说明是回复的...........................................
+                content = '回复' + '<span style="color:#058eff"> ' + json.replyUname + ' </span>: ' + content;
+            }
+
+            var maskSectionStr = "<div class='maskSection'>" +
+                "<div class='maskSectionImg'> <img src='" + json.imgUrl + "' width=40 /> </div>" +
+                "<div class='maskSectionContent'>" +
+                "<div class='maskSectionUserName'>" + json.userName + replyDomStr + "</div>" +
+                "<div class='maskSectionCtime'>" + json.dateStr + "</div>" +
+                "<div class='maskSectionComment'>" + content + "</div>" +
+                "</div>" +
+                "</div>";
+            return maskSectionStr;
+        },
+        //服务器返回了我新插入的记录主键 data.id
         prependContent: function (json) {
             var that = this;
 
-            var userImgUrl = json.userImgUrl || 'img/logo.jpg';
-            $(that.C.commentCon).prepend(
-                "<div class='maskSection'>" +
-                "<div class='maskSectionImg'> <img src='" + userImgUrl + "' width='" + 40 + "' /> </div>" +
-                "<div class='maskSectionContent'>" +
-                "<div class='maskSectionUserName'>" + json.userName + "</div>" +
-                "<div class='maskSectionCtime'>" + that.getJimiDateString() + "</div>" +
-                "<div class='maskSectionComment'>" + json.content + "</div>" +
-                "</div>");
+            var userImgUrl = searchJson.uimg || 'img/logo.jpg';
+            var maskSectionStr = that.getMaskSectionStr({
+                imgUrl: userImgUrl,
+                userName: searchJson.uname,
+                dateStr: that.getJimiDateString(),
+                content: GM.ajaxParas.content,//content 变量在inputBox点击的时候修改 点击事件在LightUpMask的新建inputBox定义
+                userId: searchJson.uid,
+                lightUpId: json.lightUpId,//这条insert记录 主键在调插入接口以后会返回
+                replyUname: GM.ajaxParas.replyUname,
+            });
+
+
+            $(that.C.commentCon).prepend(maskSectionStr);
 
             that.toTop();
+
             that.initMaskSectionCSS();
-            $(that.C.commentCon).find('#nodata').remove();
+            that.bindMaskSectionEvent();
+
         },
+
         appendContent: function (data) {
             var that = this;
             //appendDom................................................................
             if (data.length > 0) {
                 for (i = 0; i < data.length; i++) {
-                    var userImgUrl = data[i].userImgUrl || 'img/logo.jpg';
+                    var curData = data[i];//一个curData 就是 一条评论记录
+                    var userImgUrl = curData.userImgUrl || 'img/logo.jpg';
 
-                    $(that.C.commentCon).append(
-                        "<div class='maskSection'>" +
-                        "<div class='maskSectionImg'> <img src='" + userImgUrl + "' width='" + 40 + "' /> </div>" +
-                        "<div class='maskSectionContent'>" +
-                        "<div class='maskSectionUserName'>" + data[i].userName + "</div>" +
-                        "<div class='maskSectionCtime'>" + data[i].ctime + "</div>" +
-                        "<div class='maskSectionComment'>" + data[i].content + "</div>" +
-                        "</div>");
+                    var maskSectionStr = that.getMaskSectionStr({
+                        imgUrl: userImgUrl,
+                        userName: curData.userName,
+                        dateStr: curData.ctime,
+                        content: curData.content,
+                        userId: curData.uid,
+                        lightUpId: curData.lid,
+                        replyUname: curData.replyUname,
+                    });
+
+                    $(that.C.commentCon).append(maskSectionStr);
                 }
 
                 that.initMaskSectionCSS();
+                that.bindMaskSectionEvent();
 
-                if (data.length < that.config.perPage) {
+                if (data.length < 3) {
                     that.addFinishLoad();
                 }
             }
@@ -149,9 +192,16 @@
             $(that.C.commentCon).find('.maskSectionUserName').css({
                 'font-size': '16px',
                 color: '#058eff',
-                //'margin-bottom': '5px',
+            }).find('.maskSectionReplyImg').css({
+                display: 'inline',
+                width: 15,
+                margin: '0 8px 0 0',
+            }).end().find('.maskSectionReply').css({
+                display: 'inline',
+                'font-size': '12px',
+                color: '#747474',
+                float: 'right',
             })
-
 
             $(that.C.commentCon).find('.maskSectionCtime').css({
                 'font-size': '12px',
@@ -166,7 +216,31 @@
             })
 
         },
+        bindMaskSectionEvent: function () {
+            var that = this;
 
+            //遍历maskSectionReply 如果绑定过事件则不再绑定 否则事件会叠加
+            $(that.C.commentCon).find('.maskSectionReply').each(function (i, e) {
+                var ifBindclick = $(e).attr('data-bindclick');
+
+                if (ifBindclick == 'false') {
+                    $(e).attr('data-bindclick', 'true');
+                    $(e).click(function () {
+
+                        //设置回复对象 一旦设置 接口会认为这条是回复 但是app.js点亮之前会调用mask.clear()  clear中间又会调用fresh()....................
+                        var uid = $(e).attr('data-uid');
+                        var lid = $(e).attr('data-lid');
+                        var uname = $(e).attr('data-uname');
+                        GM.ajaxParas.replyUname = uname;
+                        GM.ajaxParas.replyUid = uid;
+                        GM.ajaxParas.lid = lid;//其实是replyId
+                        GM.jimiInputBox.setReplyInfo();
+
+                    })
+                }
+            })
+
+        },
         clear: function () {
             var that = this;
         },

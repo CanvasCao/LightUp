@@ -33,7 +33,7 @@
 <script src='js/jimiHost.js'></script>
 <script src='js/searchToJson/searchToJson.js'></script>
 <script src='js/globalManager/globalManager.js'></script>
-<script src='js/jimiInputBox-2.0.0.js'></script>
+<script src='js/jimiInputBox-3.0.0.js'></script>
 <script src='js/controller/controllerVideo.js'></script>
 <script src='js/app/appVideo.js'></script>
 
@@ -45,7 +45,6 @@
         }
         //searchJson............................................................
         window.searchJson = window.location.search.searchToJson();
-
 
 
         //initGM..........................................................
@@ -61,11 +60,11 @@
                 GM.ajaxParas.content = txt;
                 controller.postLightUp(GM.ajaxParas, null);
             },
-            uimg:searchJson.uimg,
+            uimg: searchJson.uimg,
         });
 
-        var ifShare=false;
-        app(ifShare);
+        GM.ifShare = false;
+        app(GM.ifShare);
     })
 </script>
 </body>

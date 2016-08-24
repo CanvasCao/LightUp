@@ -1,9 +1,9 @@
-/* JimiInputBox, a JavaScriptPlugIn v2.0.0
+/* JimiInputBox, a JavaScriptPlugIn v3.0.0
  * http://www.jimi.la/
  *
  * Copyright 2016, CaoYuhao
  * All rights reserved.
- * Date: 2016-5-24 11:31:08
+ * Date: 2016-8-24 16:37:34
  */
 
 
@@ -24,12 +24,11 @@
 
 
         //回复对象..................................
-        this.state = null;//state有add和reply两种...................
-        this.reply = {
-            reuid: null,//被回复的用户id...................
-            relid: null,//被回复的评论主键.................
-        };
+        this.state = null;//state有add和reply两种 现在不需要了 因为placeholder代替了这个属性...................'
+        this.resetReplyInfo();
 
+
+        //初始化....................................
         this.init();
     }
 
@@ -48,9 +47,8 @@
             $(this.C).html('<div class="jimiInputBoxImg"></div><div class="jimiInputBoxText"></div>');
 
             $(this.C).find('.jimiInputBoxImg').html('<img /></div>')
-            $(this.C).find('.jimiInputBoxText').html(' <input type="text" maxlength="40" value="随便说点什么"/>' +
+            $(this.C).find('.jimiInputBoxText').html(' <input type="text" maxlength="40"/>' +
                 '<div class="jimiInputBoxSubmit">微评</div>');
-
 
         },
         initCSS: function () {
@@ -120,19 +118,17 @@
 
             //input的focus和blur事件
             $(this.C).find('input').focus(function () {
-                if (that.hasFocused == false) {
-                    that.hasFocused = true;
-                    $(this).val('').css({color: 'black'});
-                }
-
             }).blur(function () {
-
             });
+
+            //oninput事件 只在w3c浏览器触发 在state是回复的情况下启动 只要内容就显示 没有就显示回复了谁
+            $(this.C).find('input')[0].addEventListener('input', function () {
+            }, false);
 
             //发送按钮的事件
             $(this.C).find('.jimiInputBoxSubmit').click(function () {
-                var txt = $(that.C).find('input').val();
-                if (txt == '' || that.hasFocused == false) {
+                var txt = $(that.C).find('input').val().trim();
+                if (txt == '') {
                     return;
                 }
                 else {
@@ -147,34 +143,27 @@
                         }, 2000);
 
 
-                        //ajax Insert....................................
-                        var txt = $(that.C).find('input').val();
-
-                        //该组件的初始化参数 在lightUpMask.js传入的初始化参数
+                        //该组件的初始化参数 在lightUpMask.js传入的初始化参数 点击以后执行的方法 和 用户头像
                         that.clickCallback(txt);
 
-                        //clearInput....................................
-                        that.fresh();
-
+                        $(that.C).find('input').val('');
                     }
                 }
 
             });
         },
 
+        //fresh 暴露给外部 调用重置reply对象方法
         fresh: function () {
             var that = this;
-            $(that.C).find('input').css({color: 'gray'}).val('随便说点什么');
-            that.hasFocused = false;
 
-
-            //刷新说明回复过了 清空一下被回复人
-            that.reply = {
-                reuid: null,//被回复的用户id
-                relid: null,//被回复的评论主键
-            };
+            //刷新的时候 说明回复过了 清空一下被回复人
+            that.resetReplyInfo();
 
         },
+
+
+        //只是用来点击以后 切换颜色
         btnDisabled: function () {
             var that = this;
 
@@ -188,6 +177,22 @@
             that.btnDisable = false;
         },
 
+
+        setReplyInfo: function () {
+            var that = this;
+
+            $(this.C).find('input')
+                .attr({placeholder: '回复 ' + GM.ajaxParas.replyUname + ' 的评论:'}).focus();
+
+        },
+        resetReplyInfo: function () {
+            GM.ajaxParas.replyUname = null;
+            GM.ajaxParas.replyUid = null;
+            GM.ajaxParas.lid = null;//其实是replyId
+
+            $(this.C).find('input')
+                .removeAttr('placeholder');
+        },
     }
 
     w.JimiInputBox = JimiInputBox;

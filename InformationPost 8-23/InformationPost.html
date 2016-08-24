@@ -55,8 +55,8 @@
 <script src='js/jimiHost.js'></script>
 <script src='js/base.js'></script>
 
-<script src='js/lightUpMask-1.0.2.js'></script>
-<script src='js/jimiInputBox-2.0.0.js'></script>
+<script src='js/lightUpMask-1.0.3.js'></script>
+<script src='js/jimiInputBox-3.0.0.js'></script>
 <script src='js/app/appArticle.js'></script>
 
 <script>
@@ -68,7 +68,7 @@
         window.searchJson = window.location.search.searchToJson();
 
 
-        GM.ifShare=false;
+        GM.ifShare = false;
         globalManager.ajaxParas = {
             perPage: 3,
             curPage: 1,//当前页数1 永远先请求第一页
@@ -77,7 +77,7 @@
             type: 1,//点亮的类型 1 2 3
             jsonpcallback: 1,
         };
-
+        //paragraph sentence content lid replyUid
 
 
         app(GM.ifShare);

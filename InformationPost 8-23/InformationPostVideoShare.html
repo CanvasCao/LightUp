@@ -55,7 +55,7 @@
             //t1 502 其他 583
             window.location = window.location + '?rid=583'
         }
-        //searchJson............................................................
+        //searchJson......................................................
         window.searchJson = window.location.search.searchToJson();
 
 
@@ -70,8 +70,8 @@
 
         var download = new Download('.download', null);
 
-        var ifShare = true;
-        app(ifShare);
+        GM.ifShare = true;
+        app(GM.ifShare);
     })
 </script>
 </body>
