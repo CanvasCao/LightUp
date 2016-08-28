@@ -42,7 +42,8 @@
         },
         createDom: function () {
             var that = this;
-            $(this.C).html('<div class="jimiInputBoxImg"></div><div class="jimiInputBoxText"></div>');
+            //$(this.C).html('<div class="jimiInputBoxImg"></div>');
+            $(this.C).html('<div class="jimiInputBoxText"></div>');
 
             $(this.C).find('.jimiInputBoxImg').html('<img /></div>')
             $(this.C).find('.jimiInputBoxText').html(' <input type="text" maxlength="40"/>' +
@@ -55,10 +56,11 @@
             $(this.C).css({
                 height: '50px',
                 'box-sizing': 'border-box',
-                padding: '10px 10px 5px 40px',
+                padding: '10px 10px 5px 15px',
                 'background-color': 'white',
                 'font-size': '16px',
-            })
+                'border-top': '1px solid rgb(204, 204, 204)'
+            });
 
             $(this.C).find('.jimiInputBoxImg').css({
                 position: 'absolute',
@@ -94,7 +96,7 @@
                 color: 'gray',
                 height: '30px',
                 'margin-left': '15px',
-                width:'80%'
+                width: '80%'
             })
 
 
