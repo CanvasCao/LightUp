@@ -96,7 +96,7 @@
                 'background-color': 'white',
                 //不能加box-sizing 是因为height会算成198
                 'box-sizing': 'border-box',
-                height: 200,
+                height: 180,
                 overflow: 'scroll'
             })
 
@@ -114,16 +114,10 @@
                 that.hide();
             })
 
-            //因为 冒泡的情况下点了mask会消失
+            //因为 不阻止冒泡 点击底部mask也会消失
             $(this.C).find('.lightUpMaskBottom').click(function (e) {
                 e.stopPropagation();
             })
-
-            //阻止评论出现时 mask的滚动
-            this.C[0].addEventListener('touchmove', function (e) {
-                //e.preventDefault();
-                e.stopPropagation();
-            }, false)
 
 
         },
@@ -140,6 +134,7 @@
             var that = this;
             this.ifShow = true;//showTag
 
+            //$('#con').css({overflow: 'hidden'});
             //real show
             setTimeout(function () {
                 $(that.C).fadeIn('normal', 'swing');
@@ -153,6 +148,9 @@
         hide: function () {
             var that = this;
             this.ifShow = false;//showTag
+
+            //$('#con').css({overflow: 'auto'});
+
             $(that.C).fadeOut('normal', 'swing');
             $(that.C).find('.lightUpMaskBottom').animate({
                 opacity: 0,

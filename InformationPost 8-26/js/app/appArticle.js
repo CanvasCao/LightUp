@@ -277,35 +277,39 @@ function app(ifShare) {
             (function ajaxComplete(index) {
                 if (index == $jimiYunYing.length) {
 
-                    //这里代表数据绑定完可以显示有点亮的数据
-                    if (data.lightUpData) {
-                        initCss(data.lightUpData);
-                        function initCss(lightUpData) {
+                    if (GM.ifMarkCount) {
+                        appMarkCount()
+                    } else {
+                        //这里代表数据绑定完可以显示有点亮的数据
+                        if (data.lightUpData) {
+                            initCss(data.lightUpData);
+                            function initCss(lightUpData) {
 //                                    console.log(JSON.stringify(lightUpData));
-                            if (!lightUpData) {
-                                return;
+                                if (!lightUpData) {
+                                    return;
+                                }
+                                ;
+                                [].forEach.call(lightUpData, function (e, i, arr) {
+                                    addCount(e.type, e.paragraph, e.sentence, e.count);
+                                });
                             }
-                            ;
-                            [].forEach.call(lightUpData, function (e, i, arr) {
-                                addCount(e.type, e.paragraph, e.sentence, e.count);
-                            });
                         }
+
+
+                        //点亮的count被点击的时候
+                        $('.count').click(function () {
+                            var $that = $(this);
+                            GM.element = $that[0];
+                            GM.elementType = GetTypeFromElement(GM.element);
+                            ResetAjaxParas();
+                            GM.ajaxParas.curPage = 1; //点亮成功一定是请求第一页
+
+                            GM.lightUpMask.clear();
+                            GM.lightUpMask.show();
+                            controller.getLightUp(GM.ajaxParas, null);
+
+                        })
                     }
-
-
-                    //点亮的count被点击的时候
-                    $('.count').click(function () {
-                        var $that = $(this);
-                        GM.element = $that[0];
-                        GM.elementType = GetTypeFromElement(GM.element);
-                        ResetAjaxParas();
-                        GM.ajaxParas.curPage = 1; //点亮成功一定是请求第一页
-
-                        GM.lightUpMask.clear();
-                        GM.lightUpMask.show();
-                        controller.getLightUp(GM.ajaxParas, null);
-
-                    })
 
                     console.log('下标溢出');
                     return;

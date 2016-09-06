@@ -8,21 +8,23 @@
     <link rel="stylesheet" href="css/main.css"/>
     <link rel="stylesheet" href="css/lightUp.css"/>
     <link rel="stylesheet" href="css/documentFlow.css"/>
+    <style type="text/css"></style>
 </head>
 <body>
+<div class="download"></div>
 <div id='con'>
     <div id='scroll'>
-        <div class='title'>
-            <img src="" class='titleImg'/>
+        <!--<div class='title'>-->
+        <!--<img src="" class='titleImg'/>-->
 
-            <div class='titleText'>
-                <div class='titleTextTop'></div>
-                <div class='titleTextBottom'>
-                    <div class='titleTextRead'></div>
-                    <div class='titleTextStar'></div>
-                </div>
-            </div>
-        </div>
+        <!--<div class='titleText'>-->
+        <!--<div class='titleTextTop'></div>-->
+        <!--<div class='titleTextBottom'>-->
+        <!--<div class='titleTextRead'></div>-->
+        <!--<div class='titleTextStar'></div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
         <div class='txtContainer'></div>
         <div class='source'>
             <div class='sourceCon'>
@@ -46,7 +48,6 @@
 <script src='js/spa/spa-middleComponent-1.0.2.js'></script>
 <script src='js/spa/navBar-2.0.0.js'></script>
 
-
 <script src='js/controller/controller.js'></script>
 <script src='js/globalManager/globalManager.js'></script>
 <script src='js/labelAdapter/labelAdapter.js'></script>
@@ -56,20 +57,19 @@
 <script src='js/tool/base.js'></script>
 
 <script src='js/class/lightUpMask-1.0.4.js'></script>
-<script src='js/class/jimiInputBox-3.0.0.js'></script>
 <script src='js/class/waterfall.js'></script>
 <script src='js/app/appArticle.js'></script>
+<script src='js/app/appMarkCount.js'></script>
 
 <script>
     $(function () {
         if (!window.location.search) {
-            window.location = window.location + '?rid=466&uid=10002&uimg=http://7xo2me.com1.z0.glb.clouddn.com/images/17RTW5G74N2J.jpg&uname=方辉真帅';
+            window.location = window.location + '?rid=466';
         }
         //searchJson.......................................................................
         window.searchJson = window.location.search.searchToJson();
 
-
-        GM.ifShare = false;
+        GM.ifShare = true;
         globalManager.ajaxParas = {
             perPage: 3,
             curPage: 1,//当前页数1 永远先请求第一页
@@ -78,11 +78,13 @@
             type: 1,//点亮的类型 1 2 3
             jsonpcallback: 1,
         };
-        //paragraph sentence content lid replyUid
 
 
         app(GM.ifShare);
-        $('#con').scrollTop(100);
+        $('#con').scrollTop(0);
+
+        GM.ifMarkCount = true;
+        appMarkCount();
 
     })
 

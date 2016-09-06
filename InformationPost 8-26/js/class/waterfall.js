@@ -53,7 +53,16 @@
         bindWaterfallEvent: function () {
             var that = this;
 
-            $(that.C.scrollCon).scroll(function () {
+            //阻止评论出现时 mask的滚动...............................................
+            this.C.commentCon[0].addEventListener('touchmove', function (e) {
+                //e.preventDefault();
+                e.stopPropagation();
+                //e.stopImmediatePropagation();
+            }, false)
+
+
+            $(that.C.scrollCon).scroll(function (e) {
+                e.stopPropagation();
 
                 if (!that.ifNeedAjax) {
                     return;
@@ -166,7 +175,7 @@
 
 
             $(that.C.commentCon).css({
-                'min-height':'200px'
+                'min-height': '200px'
             })
             $(that.C.commentCon).find('.maskSection').css({
                 'box-sizing': 'border-box',
@@ -286,7 +295,7 @@
                 }).find('img').css({
                     display: 'block',
                     margin: '5px auto',
-                    width:'80%',
+                    width: '80%',
                 })
 
             }
