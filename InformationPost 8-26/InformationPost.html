@@ -65,13 +65,14 @@
         if (!window.location.search) {
             window.location = window.location + '?rid=466&uid=10002&uimg=http://7xo2me.com1.z0.glb.clouddn.com/images/17RTW5G74N2J.jpg&uname=方辉真帅';
         }
+
         //searchJson.......................................................................
         window.searchJson = window.location.search.searchToJson();
 
 
         GM.ifShare = false;
         globalManager.ajaxParas = {
-            perPage: 3,
+            perPage: 5,
             curPage: 1,//当前页数1 永远先请求第一页
             rid: searchJson.rid,
             uid: searchJson.uid,

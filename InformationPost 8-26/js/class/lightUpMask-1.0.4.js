@@ -52,7 +52,6 @@
                         GM.ajaxParas.content = txt;
                         controller.postLightUp(GM.ajaxParas, null);
                     },
-                    uimg: searchJson.uimg,
                 });
             }
         },
@@ -65,7 +64,7 @@
                 height: '100%',
                 left: '0',
                 top: '0',
-                'background-color': 'rgba(0, 0, 0, 0.7)',
+                'background-color': 'rgba(0, 0, 0, 0.8)',
                 display: 'none',
                 'z-index': 2
                 //opacity: '0',
@@ -82,8 +81,9 @@
             $(this.C).find('.maskHeader').css({
                 height: '40px',
                 'background-color': 'white',
-                'border-bottom': '1px solid #cccccc',
+                'border-bottom': '2px solid #cccccc',
             })
+
 
             $(this.C).find('.maskClose').css({
                 float: 'right',
@@ -140,7 +140,7 @@
                 $(that.C).fadeIn('normal', 'swing');
                 $(that.C).find('.lightUpMaskBottom')
                     .css({opacity: 0, bottom: -300})
-                    .animate({opacity: 1, bottom: 0}, 'normal', 'swing', that.data.showCallback);
+                    .animate({opacity: 1, bottom: 0}, 'fast', 'swing', that.data.showCallback);
             }, 800);
         },
 
@@ -155,7 +155,7 @@
             $(that.C).find('.lightUpMaskBottom').animate({
                 opacity: 0,
                 bottom: -300
-            }, 'normal', 'swing', that.data.hideCallback);
+            }, 'fast', 'swing', that.data.hideCallback);
         },
 
         //点亮成功 拉评论之前 clear
