@@ -59,11 +59,6 @@ function labelAdapter($con) {//传进一个jq对象 是个容器 会对容器内
 
         }
 
-        $(this).click(function(){
-            var src=$(this).attr('src');
-            var href=base64_encode('{"type":6,"imgSrc":"'+src+'"}');
-            window.location.href='jimi://'+href;
-        })
 
     })
     //视频适配16比9.........................................................................................
@@ -80,8 +75,7 @@ function labelAdapter($con) {//传进一个jq对象 是个容器 会对容器内
 
         //paragraphWeb.....................................................
         if ($(e).hasClass('jimi-Yunying')) { //内部元素还没ajax 注意！jimi-Yunying只是一个容器
-            $(e).addClass('paragraphWeb');//他不是paragraph段落 而是一个web段落
-            //$(e).append('<span class="count"></span>'); 很遗憾这里不能加 ajax会覆盖全部
+            $(e).remove();
             return;
         }
 
@@ -89,12 +83,6 @@ function labelAdapter($con) {//传进一个jq对象 是个容器 会对容器内
         if ($(e).find('img').length > 0) {//一个para里最多放一张图 imgBorder
             $(e).addClass('paragraphImg');
             $(e).append("<span class='count'></span>");
-            $(e).find('img').each(function (i, e) {
-                $(e).click(function () {
-                    //点击放大..................
-                    console.log($(e).attr('src'));
-                });
-            });
             return;  //return依然会遍历所有元素
         }
 
@@ -116,6 +104,12 @@ function labelAdapter($con) {//传进一个jq对象 是个容器 会对容器内
         $(e).html(brProcessedArr.join('<br><br>'));
 
     });
+
+
+    //绑定完标签以后 新建全局的jqMap
+    GM.jQueryMap.$paragraphs= $('.paragraph');
+    GM.jQueryMap.$paragraphImgs= $('.paragraphImg');
+    GM.jQueryMap.$paragraphWebs= $('.paragraphWeb');
 
 }
 

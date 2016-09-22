@@ -140,7 +140,7 @@
                 $(that.C).fadeIn('normal', 'swing');
                 $(that.C).find('.lightUpMaskBottom')
                     .css({opacity: 0, bottom: -300})
-                    .animate({opacity: 1, bottom: 0}, 'fast', 'swing', that.data.showCallback);
+                    .velocity({opacity: 1, bottom: 0}, 'normal', 'swing', that.data.showCallback);
             }, 800);
         },
 
@@ -152,10 +152,10 @@
             //$('#con').css({overflow: 'auto'});
 
             $(that.C).fadeOut('normal', 'swing');
-            $(that.C).find('.lightUpMaskBottom').animate({
+            $(that.C).find('.lightUpMaskBottom').velocity({
                 opacity: 0,
                 bottom: -300
-            }, 'fast', 'swing', that.data.hideCallback);
+            }, 'normal', 'swing', that.data.hideCallback);
         },
 
         //点亮成功 拉评论之前 clear

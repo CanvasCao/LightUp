@@ -3,8 +3,8 @@
 .paragraph {
     text-align: justify;
     padding: 10px;
-    font-size: 17px;
-    line-height: 31px;
+    font-size: 18px;
+    line-height: 17px;
     color: #262626;
 }
 
@@ -141,7 +141,7 @@ strong {
 
 /*第二款*/
 .borderNormal {
-    border: 1px dashed #000;
+    /*border: 1px dashed #000;*/
 }
 
 .textCenter {

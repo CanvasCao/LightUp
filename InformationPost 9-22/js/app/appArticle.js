@@ -14,11 +14,11 @@ function app(ifShare) {
         ifShare: ifShare,
         hideCallback: function () {
             RemoveClass();
-            $light.css({display: 'block'}).animate({opacity: 1}, 'fast', 'swing', function () {
+            $light.css({display: 'block'}).velocity({opacity: 1}, 'fast', 'swing', function () {
             });
         },
         showCallback: function () {
-            $light.animate({opacity: 0}, 'fast', 'swing', function () {
+            $light.velocity({opacity: 0}, 'fast', 'swing', function () {
                 $light.css({display: 'none'});
             });
         }
@@ -26,6 +26,7 @@ function app(ifShare) {
 
 
     //点亮标签相关 全局变量...................................................................................
+    var lightUpLock = false;
     var ifDragging = false;
     var ifMoved = false;
     var mouseDown = {x: 0, y: 0};
@@ -72,19 +73,24 @@ function app(ifShare) {
         if (ifDragging) {
             e.preventDefault();
 
+            if (lightUpLock) {
+                return;
+            }
+            else {
+                ifMoved = true;//标记移动
+                var touch = e.touches[0];
+                mouseCurrent.x = touch.clientX;
+                mouseCurrent.y = touch.clientY;
+                lightState.touchMove.transform = 'translate3d(' + (mouseCurrent.x - mouseDown.x) + 'px,' + (mouseCurrent.y - mouseDown.y) + 'px,0px)';
+                $light.css(lightState.touchMove);
 
-            ifMoved = true;//标记移动
-            var touch = e.touches[0];
-            mouseCurrent.x = touch.clientX;
-            mouseCurrent.y = touch.clientY;
-            lightState.touchMove.transform = 'translate3d(' + (mouseCurrent.x - mouseDown.x) + 'px,' + (mouseCurrent.y - mouseDown.y) + 'px,0px)';
-            $light.css(lightState.touchMove);
 
-
-            ClearTimer();
-            timer = setTimeout(function () {
                 LightUp();
-            }, 200);
+                lightUpLock = true;
+                timer = setTimeout(function () {
+                    lightUpLock = false;
+                }, 20);
+            }
 
         }
     }, false)
@@ -92,7 +98,7 @@ function app(ifShare) {
     window.addEventListener('touchend', function (e) {
         //e.preventDefault();
         if (ifDragging && ifMoved) {
-            ClearTimer();
+            lightUpLock = false;
 
             if (LightUp()) {
                 ResetAjaxParas();
@@ -104,17 +110,20 @@ function app(ifShare) {
             }
             ifDragging = false;
             ifMoved = false;
+            $light.css(lightState.touchEnd);
         }
-        $light.css(lightState.touchEnd);
     }, false)
 
-    function ClearTimer() {
-        clearTimeout(timer);
-        delete(timer);
-    }
 
     function RemoveClass() {
-        $('.paragraphImg,.paragraphWeb,.sentence').removeClass('active'); //removeAll
+        var ele = GM.lastElement;
+        var type = GM.lastElementType;
+
+        if (type == 1) {
+            $(ele).closest('.sentence').removeClass('active');
+        } else if (type == 2) {
+            $(ele).parent('.paragraphImg').removeClass('active');
+        }
     }
 
     function AddClass() {
@@ -123,19 +132,9 @@ function app(ifShare) {
             $(GM.element).closest('.sentence').addClass('active');
         } else if (type == 2) {
             $(GM.element).parent('.paragraphImg').addClass('active');
-        } else if (type == 3) {
-            $(GM.element).closest('.paragraphWeb').addClass('active');
         }
     }
 
-    function IfAlreadyLightUp() {
-        var ele = GM.element;
-        if ($(ele).closest('.sentence').hasClass('active') || $(ele).parent('.paragraphImg').hasClass('active') || $(ele).closest('.paragraphWeb').hasClass('active')) {
-            return true; //
-        } else {
-            return false;
-        }
-    }
 
     function GetTypeFromElement() {
         var ele = GM.element;
@@ -144,21 +143,19 @@ function app(ifShare) {
         }
         else if ($(ele).closest('.paragraphImg').length) {
             return 2;
-        } else if ($(ele).closest('.paragraphWeb').length) {
-            return 3;
-        } else {
+        }else {
             return null;
         }
     }
 
     //UI层点亮函数 返回布尔是否点亮成功 刷新全局ele和eleType
     function LightUp() {
+        GM.lastElementType = GM.elementType || null;
+        GM.lastElement = GM.element || null;
         GM.element = document.elementFromPoint(mouseCurrent.x, mouseCurrent.y);
-
-        globalManager.elementType = GetTypeFromElement();
-
-        if (globalManager.elementType) {
-            RemoveClass();
+        GM.elementType = GetTypeFromElement();
+        RemoveClass();
+        if (GM.elementType!=null) {
             AddClass();
             return true;
         }
@@ -208,11 +205,9 @@ function app(ifShare) {
         var $ele = null;
 //                    count前面的元素加addClass init类名
         if (eleType == 1) {
-            $ele = $('.paragraph').eq(paragraph).find('.sentence').eq(sentence);
+            $ele = GM.jQueryMap.$paragraphs.eq(paragraph).find('.sentence').eq(sentence);
         } else if (eleType == 2) {
-            $ele = $('.paragraphImg').eq(paragraph);
-        } else if (eleType == 3) {
-            $ele = $('.paragraphWeb').eq(paragraph);
+            $ele = GM.jQueryMap.$paragraphImgs.eq(paragraph);
         }
         else {
             return;
@@ -225,11 +220,9 @@ function app(ifShare) {
         var para = GM.ajaxParas;
 //                    count前面的元素加addClass init类名
         if (para.type == 1) {
-            $ele = $('.paragraph').eq(para.paragraph).find('.sentence').eq(para.sentence);
+            $ele = GM.jQueryMap.$paragraphs.eq(para.paragraph).find('.sentence').eq(para.sentence);
         } else if (para.type == 2) {
-            $ele = $('.paragraphImg').eq(para.paragraph);
-        } else if (para.type == 3) {
-            $ele = $('.paragraphWeb').eq(para.paragraph);
+            $ele = GM.jQueryMap.$paragraphImgs.eq(para.paragraph);
         }
 
         var count = parseInt($ele.find('.count').html()) || 0;
@@ -271,98 +264,40 @@ function app(ifShare) {
             $txtContainer.html(text);
             labelAdapter($txtContainer);//适配标签...........................................................
 
-            //这一步Ajax 递归绑定肌秘yunying的数据.............................................................
-            var $jimiYunYing = $('.jimi-Yunying'); //jq对象
 
-            (function ajaxComplete(index) {
-                if (index == $jimiYunYing.length) {
-
-                    if (GM.ifMarkCount) {
-                        appMarkCount()
-                    } else {
-                        //这里代表数据绑定完可以显示有点亮的数据
-                        if (data.lightUpData) {
-                            initCss(data.lightUpData);
-                            function initCss(lightUpData) {
+            if (GM.ifMarkCount) {
+                appMarkCount()
+            } else {
+                //这里代表数据绑定完可以显示有点亮的数据
+                if (data.lightUpData) {
+                    initCss(data.lightUpData);
+                    function initCss(lightUpData) {
 //                                    console.log(JSON.stringify(lightUpData));
-                                if (!lightUpData) {
-                                    return;
-                                }
-                                ;
-                                [].forEach.call(lightUpData, function (e, i, arr) {
-                                    addCount(e.type, e.paragraph, e.sentence, e.count);
-                                });
-                            }
+                        if (!lightUpData) {
+                            return;
                         }
-
-
-                        //点亮的count被点击的时候
-                        $('.count').click(function () {
-                            var $that = $(this);
-                            GM.element = $that[0];
-                            GM.elementType = GetTypeFromElement(GM.element);
-                            ResetAjaxParas();
-                            GM.ajaxParas.curPage = 1; //点亮成功一定是请求第一页
-
-                            GM.lightUpMask.clear();
-                            GM.lightUpMask.show();
-                            controller.getLightUp(GM.ajaxParas, null);
-
-                        })
+                        ;
+                        [].forEach.call(lightUpData, function (e, i, arr) {
+                            addCount(e.type, e.paragraph, e.sentence, e.count);
+                        });
                     }
-
-                    console.log('下标溢出');
-                    return;
                 }
 
-                var jqObj = $jimiYunYing.eq(index);
-                var pid = jqObj.attr('data-pid');
-                $.ajax({
-                    type: "get",
-                    url: jimiHost + '/formual_safe.php?pid=' + pid,
-                    dataType: "jsonp",
-                    jsonp: "callback",
-                    jsonpCallback: "jsonpcallback",
-                    success: function (data) {
-//                                  console.log(JSON.stringify(data))
-                        jqObj.html('<div class="header"></div>' +
-                            '<div class="navBar"></div>' +
-                            '<div class="productDetailCanvas"></div>');
 
-                        var header = new Header(jqObj.find('.header')[0], data);
-                        var navBar = new NavBar(jqObj.find('.navBar')[0], {
-                            navImg: "img/navBar/b.png",
-                            navTxt: '产品参数',
-                        });
-                        jqObj.find('.navBar').css({'position': 'relative'})
-                            .append(' <img src="img/navBar/arrow.png" height="12px"  style="float: right;margin-top: 3px"/>')
-                            .append('<a></a>');
+                //点亮的count被点击的时候
+                $('.count').click(function () {
+                    var $that = $(this);
+                    GM.element = $that[0];
+                    GM.elementType = GetTypeFromElement(GM.element);
+                    ResetAjaxParas();
+                    GM.ajaxParas.curPage = 1; //点亮成功一定是请求第一页
 
+                    GM.lightUpMask.clear();
+                    GM.lightUpMask.show();
+                    controller.getLightUp(GM.ajaxParas, null);
 
-                        var href = base64_encode('{ "type": 4, "objId": "' + pid + '","altBtnIndex":0}');
-                        jqObj.find('.navBar a').css({
-                            'position': 'absolute', width: '100%', height: '100%', left: 0, top: 0,
-                        }).attr({href: 'jimi://' + href});
-//
-
-                        var pdc = new ProductDetailCanvas(jqObj.find('.productDetailCanvas')[0], data, false);
-
-                        //count标签
-                        jqObj.append('<span class="count"></span>');
-
-                        //递归..............................................................................
-                        ajaxComplete(index + 1);
-                    },
-                    error: function (err) {
-                        console.log('YUNYING ERROR!');
-                        console.log(err);
-
-                        //递归..............................................................................
-                        ajaxComplete(index + 1);
-
-                    }
-                });
-            })(0);
+                })
+            }
         },
         error: function (err) {
             console.log('ERROR!');
