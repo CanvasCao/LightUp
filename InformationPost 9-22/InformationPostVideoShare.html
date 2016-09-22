@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+    <title>肌秘视频</title>
+    <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/video/documentFlow.css"/>
+    <style type="text/css">
+        .download {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            border-top: 4px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+<div id='videoCon'>
+    <video id="video" x-webkit-airplay="true" webkit-playsinline="true" preload="none" controls="controls" width="100%"
+           height="100%"></video>
+</div>
+
+<div class='scrollCon'>
+    <div class='scroll'>
+        <div class='readAndStar'>
+            <div class='read'></div>
+            <div class='star'></div>
+        </div>
+        <div class='description'></div>
+        <div class='commentCon'></div>
+    </div>
+
+    <div class="download"></div>
+</div>
+
+
+<script src="http://apps.bdimg.com/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src='js/class/waterfall.js'></script>
+<script src='js/constant/jimiHost.js'></script>
+<script src='js/download/download.js'></script>
+<script src='js/searchToJson/searchToJson.js'></script>
+<script src='js/globalManager/globalManager.js'></script>
+<script src='js/controller/controllerVideo.js'></script>
+<script src='js/app/appVideo.js'></script>
+
+
+<script>
+    $(function () {
+        if (!window.location.search) {
+            //t1 502 其他 583
+            window.location = window.location + '?rid=583'
+        }
+        //searchJson......................................................
+        window.searchJson = window.location.search.searchToJson();
+
+
+        //initGM..........................................................
+        GM.ajaxParas = {
+            perPage: 8,
+            curPage: 1,//当前页数1 永远先请求第一页
+            rid: searchJson.rid,
+            uid: searchJson.uid,
+            jsonpcallback: 1,
+        };
+
+        var download = new Download('.download', null);
+
+        GM.ifShare = true;
+        app(GM.ifShare);
+    })
+</script>
+</body>
+</html>
