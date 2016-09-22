@@ -175,7 +175,6 @@
 
 
             $(that.C.commentCon).css({
-                'min-height': '200px'
             })
             $(that.C.commentCon).find('.maskSection').css({
                 'box-sizing': 'border-box',
@@ -291,11 +290,10 @@
                     "</div>");
                 $(that.C.commentCon).find('#nodata').css({
                     'text-align': 'center',
-                    'padding-bottom': 50,
                 }).find('img').css({
                     display: 'block',
                     margin: '5px auto',
-                    width: '80%',
+                    width: '50%',
                 })
 
             }

@@ -143,7 +143,7 @@ function app(ifShare) {
         }
         else if ($(ele).closest('.paragraphImg').length) {
             return 2;
-        }else {
+        } else {
             return null;
         }
     }
@@ -155,7 +155,7 @@ function app(ifShare) {
         GM.element = document.elementFromPoint(mouseCurrent.x, mouseCurrent.y);
         GM.elementType = GetTypeFromElement();
         RemoveClass();
-        if (GM.elementType!=null) {
+        if (GM.elementType != null) {
             AddClass();
             return true;
         }
@@ -283,18 +283,20 @@ function app(ifShare) {
                     }
                 }
 
+                //点亮的count被点击的时候..............
+                $(window).click(function(e){
+                    var target= e.target;
+                    var $target=$(target);
+                    if($target.closest('.count').length>0){
+                        GM.element =target;
+                        GM.elementType = GetTypeFromElement(GM.element);
+                        ResetAjaxParas();
+                        GM.ajaxParas.curPage = 1; //点亮成功一定是请求第一页
+                        GM.lightUpMask.clear();
+                        GM.lightUpMask.show();
+                        controller.getLightUp(GM.ajaxParas, null);
+                    }
 
-                //点亮的count被点击的时候
-                $('.count').click(function () {
-                    var $that = $(this);
-                    GM.element = $that[0];
-                    GM.elementType = GetTypeFromElement(GM.element);
-                    ResetAjaxParas();
-                    GM.ajaxParas.curPage = 1; //点亮成功一定是请求第一页
-
-                    GM.lightUpMask.clear();
-                    GM.lightUpMask.show();
-                    controller.getLightUp(GM.ajaxParas, null);
 
                 })
             }

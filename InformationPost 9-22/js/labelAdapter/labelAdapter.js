@@ -82,6 +82,7 @@ function labelAdapter($con) {//传进一个jq对象 是个容器 会对容器内
         //paragraphImg
         if ($(e).find('img').length > 0) {//一个para里最多放一张图 imgBorder
             $(e).addClass('paragraphImg');
+            $(e).html($(e).find('img')[0]);//去空格
             $(e).append("<span class='count'></span>");
             return;  //return依然会遍历所有元素
         }

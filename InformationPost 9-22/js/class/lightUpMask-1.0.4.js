@@ -141,7 +141,7 @@
                 $(that.C).find('.lightUpMaskBottom')
                     .css({opacity: 0, bottom: -300})
                     .velocity({opacity: 1, bottom: 0}, 'normal', 'swing', that.data.showCallback);
-            }, 800);
+            }, 400);
         },
 
         //其实hide之后就可以 清空（clear）InputBox 但是点亮之前一定会clear 所以这里可以不做
