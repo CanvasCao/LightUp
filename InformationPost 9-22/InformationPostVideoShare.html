@@ -36,8 +36,6 @@
 
     <div class="download"></div>
 </div>
-
-
 <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src='js/class/waterfall.js'></script>
 <script src='js/constant/jimiHost.js'></script>
@@ -59,6 +57,7 @@
 
 
         //initGM..........................................................
+        GM.edition = 'share';
         GM.ajaxParas = {
             perPage: 8,
             curPage: 1,//当前页数1 永远先请求第一页
@@ -68,9 +67,7 @@
         };
 
         var download = new Download('.download', null);
-
-        GM.ifShare = true;
-        app(GM.ifShare);
+        app();
     })
 </script>
 </body>

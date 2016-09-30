@@ -1,4 +1,4 @@
-function app(ifShare) {
+function app() {
 
     //initCSS...............................................................
     //视频比例
@@ -17,8 +17,9 @@ function app(ifShare) {
         jsonp: "callback",
         jsonpCallback: "jsonpcallback",
         success: function (data) {
+            $('#loading').hide();
+            $('#loaded').show();
             console.log(JSON.stringify(data));
-            $('body').animate({opacity: 1});
 
             //绑定数据....................
             $('#video').attr({'src': data.videoUrl});
@@ -43,11 +44,6 @@ function app(ifShare) {
             //加载第一次评论......................................
             GM.waterfall.JuHuaOn();
             controller.getLightUp(GM.ajaxParas, null);
-
-
-            //JSBridge........................................
-
-
         },
         error: function (err) {
             console.log('ERROR!');

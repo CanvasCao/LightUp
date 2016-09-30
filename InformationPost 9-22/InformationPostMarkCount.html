@@ -35,19 +35,9 @@
     </div>
     <div class='lightUpMask'></div>
 </div>
-<div class='light'></div>
+<div class='light' style='display: none'></div>
 
 <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
-
-<script src='js/spa/productDetailCanvas-1.0.2.js'></script>
-<script src='js/spa/echartsBasic&Graph.min.js'></script>
-<script src='js/spa/alternateBtn-1.0.0.js'></script>
-<script src='js/spa/spa-alertCon.js'></script>
-<script src='js/spa/spa-compositionContainer.js'></script>
-<script src='js/spa/spa-header.js'></script>
-<script src='js/spa/spa-middleComponent-1.0.2.js'></script>
-<script src='js/spa/navBar-2.0.0.js'></script>
-
 <script src='js/controller/controller.js'></script>
 <script src='js/globalManager/globalManager.js'></script>
 <script src='js/labelAdapter/labelAdapter.js'></script>
@@ -69,9 +59,9 @@
         //searchJson.......................................................................
         window.searchJson = window.location.search.searchToJson();
 
-        GM.ifShare = true;
+
         globalManager.ajaxParas = {
-            perPage:5,
+            perPage: 5,
             curPage: 1,//当前页数1 永远先请求第一页
             rid: searchJson.rid,
             uid: searchJson.uid,
@@ -80,7 +70,8 @@
         };
 
 
-        app(GM.ifShare);
+        GM.edition = 'freeLogin';
+        app();
         $('#con').scrollTop(0);
 
         GM.ifMarkCount = true;

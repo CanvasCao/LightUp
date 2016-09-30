@@ -88,7 +88,7 @@
 
             //点击回复按钮....................................................................
             var replyDomStr = '';
-            if (GM.ifShare) {
+            if (GM.edition == 'freeLogin'||GM.edition == 'share') {
                 replyDomStr = '';
             } else {
                 //点击会知道当前用户的主键 告诉服务器 哪条评论被回复 的主键和uid 记录uname是因为 点击回复需要显示回复了谁
@@ -174,8 +174,7 @@
             var that = this;
 
 
-            $(that.C.commentCon).css({
-            })
+            $(that.C.commentCon).css({})
             $(that.C.commentCon).find('.maskSection').css({
                 'box-sizing': 'border-box',
                 'padding-left': that.config.imgW + 20,

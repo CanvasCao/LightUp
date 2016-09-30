@@ -1,4 +1,4 @@
-function app(ifShare) {
+function app() {
 
     //init 头部图片起始位置................................................................
     $('#con').css({width: $(window).width(), height: $(window).height()})
@@ -11,7 +11,6 @@ function app(ifShare) {
 
     //mask对象
     globalManager.lightUpMask = new LightUpMask('.lightUpMask', {
-        ifShare: ifShare,
         hideCallback: function () {
             RemoveClass();
             $light.css({display: 'block'}).velocity({opacity: 1}, 'fast', 'swing', function () {
@@ -244,8 +243,10 @@ function app(ifShare) {
         jsonp: "callback",
         jsonpCallback: "jsonpcallback",
         success: function (data) {
+
+            $('#loading').hide();
+            $('#loaded').show();
             console.log(JSON.stringify(data));
-            $('body').animate({opacity: 1});
 
             //title......................................................................
             $('.titleImg').attr('src', data.titleImgUrl);

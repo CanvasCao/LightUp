@@ -46,7 +46,7 @@
 
             $(this.C).find('.lightUpMaskBottom').append("<div class='maskInputBox'></div>");
 
-            if (!GM.ifShare) {
+            if (GM.edition=='login') {
                 GM.jimiInputBox = new JimiInputBox($(that.C).find('.maskInputBox')[0], {
                     clickCallback: function (txt) {
                         GM.ajaxParas.content = txt;

@@ -29,12 +29,6 @@ input, button, select, textarea {
     user-select: text;
 }
 
-body {
-    /*height: 1000px;*/
-    opacity: 0;
-    box-sizing: border-box;
-}
-
 img {
     /*display: block;*/
     /*去掉底部白边*/
