@@ -58,7 +58,6 @@
 
 
 <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
-
 <script src='js/controller/controller.js'></script>
 <script src='js/globalManager/globalManager.js'></script>
 <script src='js/labelAdapter/labelAdapter.js'></script>
@@ -72,8 +71,6 @@
 <script src='js/class/jimiInputBox-3.0.0.js'></script>
 <script src='js/class/waterfall.js'></script>
 <script src='js/app/appArticle.js'></script>
-
-
 <script>
     $(function () {
         if (!window.location.search) {
@@ -81,7 +78,6 @@
         }
         //searchJson.......................................................................
         window.searchJson = window.location.search.searchToJson();
-
 
         globalManager.ajaxParas = {
             perPage: 5,
@@ -92,17 +88,13 @@
             jsonpcallback: 1,
         };
 
-
         //download对象
         var download = new Download('.download', null);
-        GM.edition='share';
+        GM.edition = 'share';
         app();
         $('#con').scrollTop(0);
 
     })
-
-
 </script>
-
 </body>
 </html>

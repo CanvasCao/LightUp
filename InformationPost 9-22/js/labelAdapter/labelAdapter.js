@@ -3,8 +3,6 @@
  */
 
 String.prototype.AppendSpansByPeriod = function () {
-
-
     var lastChar = this.substr(this.length - 1, 1);
 
     var arr = ['。', '！', '!', '？', '?']; //。?？！!
@@ -16,7 +14,6 @@ String.prototype.AppendSpansByPeriod = function () {
     else {
         var pattern = /[^。?？！!]*[。?？！!]{1}/ig;
         var htmlArr = this.match(pattern);
-
 
         var str = '';
         for (var i = 0; i < htmlArr.length; i++) {
@@ -34,7 +31,6 @@ function labelAdapter($con) {//传进一个jq对象 是个容器 会对容器内
     var bodyPaddingW = parseInt($('.txtContainer').css('padding-left'));
     var pPaddingW = parseInt($('p').css('padding-left'));
 
-
     //图片适配
     $con.find('img').css({ //把所有图片转块 左右居中
         display: 'block',
@@ -47,7 +43,6 @@ function labelAdapter($con) {//传进一个jq对象 是个容器 会对容器内
         //console.log(RATE);
         var imgFixedW = (winW - bodyPaddingW * 2 - pPaddingW * 2) - 2;
 
-
         if (imgW > imgFixedW) {
             $(e).attr({width: imgFixedW, height: imgFixedW / RATE});
             $(e).css({width: imgFixedW, height: imgFixedW / RATE});
@@ -58,12 +53,7 @@ function labelAdapter($con) {//传进一个jq对象 是个容器 会对容器内
             $(e).css({width: imgFixedW});
 
         }
-
-
     })
-    //视频适配16比9.........................................................................................
-    $con.find('iframe').css({width: (winW - bodyPaddingW * 2), height: (winW - bodyPaddingW * 2) * 9 / 16})
-
 
     //这一步增加点亮专用类名 删除不是p的标签 ..................................................................
     $con.children().each(function (i, e) {
@@ -71,7 +61,6 @@ function labelAdapter($con) {//传进一个jq对象 是个容器 会对容器内
             $(e).remove();
             return;
         }
-
 
         //paragraphWeb.....................................................
         if ($(e).hasClass('jimi-Yunying')) { //内部元素还没ajax 注意！jimi-Yunying只是一个容器
@@ -86,7 +75,6 @@ function labelAdapter($con) {//传进一个jq对象 是个容器 会对容器内
             $(e).append("<span class='count'></span>");
             return;  //return依然会遍历所有元素
         }
-
 
         //paragraph sentence
         //认为是真正的文本标签
